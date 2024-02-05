@@ -16,7 +16,7 @@ abstract class Khaata {
     }
 
     public void bholPaisa() {
-        System.out.println("Paisa: ₹" + paisa);
+        System.out.println("Paisa: " + paisa);
     }
 
     public void rakhana(double dhan) {
@@ -98,6 +98,10 @@ public class BhaiKaBank {
     public static void main(String[] kya_chahiye_mera_bhai) {
         Scanner sunana = new Scanner(System.in);
         KhaateKeeJaanch khaate = new KhaateKeeJaanch();
+
+        System.out.println("Welcome to Bhai Ka Bank mera bhai");
+        System.out.println("Khaata Kholo mera bhai");
+        System.out.println("Pahela chaabee banao\n ");
         
         /* Make a loop that allows the user to access all the features of the khaate or leave if they want */
         while (true) {
@@ -138,5 +142,8 @@ public class BhaiKaBank {
             System.out.println('\n');
 
         }
+
+        System.out.println("Dhanyavaad mere bhai");
+        System.out.println("bye bhai");
     }
 }

@@ -97,6 +97,10 @@ khula kuch BhaiKaBank {
     khula shaanti nahin main(String[] kya_chahiye_mera_bhai) {
         dekh bhai sunana = meree baat suno bhai;
         KhaateKeeJaanch khaate = naya KhaateKeeJaanch();
+
+        bhol bhai ("Welcome to Bhai Ka Bank mera bhai");
+        bhol bhai ("Khaata Kholo mera bhai");
+        bhol bhai ("Pahela chaabee banao\n ");
         
         /* Make a loop that allows the user to access all the features of the khaate or leave agar bhai they want */
         jab tak (sahi) {
@@ -137,5 +141,8 @@ khula kuch BhaiKaBank {
             bhol bhai ('\n');
 
         }
+
+        bhol bhai ("Dhanyavaad mere bhai");
+        bhol bhai ("bye bhai");
     }
 }
