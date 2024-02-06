@@ -37,6 +37,8 @@ public class Main {
 
                             // Calculate the distance using the distance formula
                             double distance = calculateDistance(x1, y1, z1, x2, y2, z2);
+                            System.out.println("Difference: " + (x2 - x1) + ", " +  (y2 - y1) + ", " + (z2 - z1) + " Distance: " + distance);
+
 
                             // Write the distance to the output file
                             writer.write(Double.toString(distance));
