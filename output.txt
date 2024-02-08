@@ -1,2 +1,6 @@
-3.4641016151377544
-10.0
+Distance between 3.0 4.0 5.0 and 1.0 2.0 3.0 is 3.4641016151377544
+Distance between 3.0 4.0 5.0 and 6.0 1.0 2.0 is 5.196152422706632
+Distance between 3.0 4.0 5.0 and 7.0 3.0 1.0 is 5.744562646538029
+Distance between 1.0 2.0 3.0 and 6.0 1.0 2.0 is 5.196152422706632
+Distance between 1.0 2.0 3.0 and 7.0 3.0 1.0 is 6.4031242374328485
+Distance between 6.0 1.0 2.0 and 7.0 3.0 1.0 is 2.449489742783178
