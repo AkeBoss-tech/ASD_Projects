@@ -1,148 +1,161 @@
+laana java.io.BufferedReader;
+laana java.io.BufferedWriter;
+laana java.io.FileReader;
+laana java.io.FileWriter;
+laana java.io.IOException;
+laana java.util.ArrayList;
 laana dekhne_wala;
 
-interface Band {
-    khula nahin chabeeBanao(bhai ye hai chaabee);
-    khula nahin bandKerBhai(bhai ye hai chaabee);
-    khula nahin kholo(bhai ye hai chaabee);
-    khula haan ya nahin rok();
-}
+kuch Jagah {
+    dashamalav x, y, z;
 
-maaya kuch Khaata {
-    surakshit dashamalav paisa;
-    
-    khula Khaata() {
-        paisa = 0;
+    khula Jagah(dashamalav x, dashamalav y, dashamalav z) {
+        ye.x = x;
+        ye.y = y;
+        ye.z = z;
     }
 
-    khula nahin bholPaisa() {
-        bhol bhai ("Paisa: " + paisa);
+    khula Jagah(String x, String y, String z) {
+        ye.x = Double.parseDouble(x);
+        ye.y = Double.parseDouble(y);
+        ye.z = Double.parseDouble(z);
     }
 
-    khula nahin rakhana(dashamalav dhan) {
-        paisa += dhan;
+    khula dashamalav distance(Jagah p) {
+        vaapas karo Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2) + Math.pow(p.z - z, 2));
     }
 
-    khula haan ya nahin nikhaalo(dashamalav dhan) {
-        agar bhai (paisa >= dhan) {
-            paisa -= dhan;
-            vaapas karo sahi;
-        }
+    khula Jagah center(Jagah p) {
+        vaapas karo naya Jagah((x + p.x) / 2, (y + p.y) / 2, (z + p.z) / 2);
+    }
 
-        bhol bhai ("paisa nehain hai mera yaar");
-        vaapas karo galat;
-    };
-}    
-
-kuch KhaateKeeJaanch extends Khaata implements Band {
-    raaz bhai ye hai chaabee;
-    raaz haan ya nahin rok = sahi;
-
-    @aap jo kah rahe hain main use nahin sun raha hoon
-    khula nahin chabeeBanao(bhai ye hai chaabee) {
-        ye.chaabee = chaabee;
-        bhol bhai ("Chabee Bengaya");
+    khula Jagah add(Jagah p) {
+        vaapas karo naya Jagah(x + p.x, y + p.y, z + p.z);
     }
 
     @aap jo kah rahe hain main use nahin sun raha hoon
-    khula nahin bandKerBhai(bhai ye hai chaabee) {
-        agar bhai (chaabee == ye.chaabee) {
-            rok = sahi;
-            bhol bhai ("Khaata band ho Gaya");
-            vaapas karo;
-        }
-        bhol bhai ("Kaam Nahin Karata Bro");
+    khula String toString() {
+        vaapas karo x + " " + y + " " + z;
     }
 
-    @aap jo kah rahe hain main use nahin sun raha hoon
-    khula nahin kholo(bhai ye hai chaabee) {
-        agar bhai (chaabee == ye.chaabee) {
-            rok = galat;
-            bhol bhai ("Khaata Khul Gaya");
-            vaapas karo;
-        }
-        bhol bhai ("Kaam Nahin Karata Bro");
-    }
-
-    @aap jo kah rahe hain main use nahin sun raha hoon
-    khula haan ya nahin rok() {
-        vaapas karo rok;
-    }
-
-    khula nahin bholRokPaisa() {
-        agar bhai (rok()) {
-            bhol bhai ("Kaam Nahin Karata Bro");
-            vaapas karo;
-        }
-        bholPaisa();
-    }
-
-    khula haan ya nahin rokNikhaalo(dashamalav dhan) {
-        agar bhai (rok()) {
-            bhol bhai ("Kaam Nahin Karata Bro");
-            vaapas karo galat;
-        }
-        vaapas karo nikhaalo(dhan);
-    }
-
-    khula nahin rokRakhana(dashamalav dhan) {
-        agar bhai (rok()) {
-            bhol bhai ("Kaam Nahin Karata Bro");
-        }
-        rakhana(dhan);
+    khula Jagah divide(bhai ye hai n) {
+        vaapas karo naya Jagah(x / n, y / n, z / n);
     }
 }
 
-khula kuch BhaiKaBank {
-    
-    khula shaanti nahin main(String[] kya_chahiye_mera_bhai) {
-        dekh bhai sunana = meree baat suno bhai;
-        KhaateKeeJaanch khaate = naya KhaateKeeJaanch();
+khula kuch Main {
+    khula shaanti nahin main(String args[]) throws IOException {
+        BufferedReader reader = null;
+        BufferedWriter output = null;
 
-        bhol bhai ("Welcome to Bhai Ka Bank mera bhai");
-        bhol bhai ("Khaata Kholo mera bhai");
-        bhol bhai ("Pahela chaabee banao\n ");
-        
-        /* Make a loop that allows the user to access all the features of the khaate or leave agar bhai they want */
-        jab tak (sahi) {
-            bhol bhai ("1. Chabee Lagao");
-            bhol bhai ("2. Khaata pe Taala Lagao");
-            bhol bhai ("3. Khaata Kholo");
-            bhol bhai ("4. Paisa Bhol");
-            bhol bhai ("5. Paisa Rakhana");
-            bhol bhai ("6. Paisa Nikhaalo");
-            bhol bhai ("7. Chhoden");
-            bhol bhai ("Aap kya chaahate hain: ");
-            bhai ye hai choice = sunana.agalaInt();
-            
-            agar bhai (choice == 1) {
-                bhol bhai ("chaabee daalo: ");
-                khaate.chabeeBanao(sunana.agalaInt());
-            } nahi to bhai (choice == 2) {
-                bhol bhai ("chaabee daalo: ");
-                khaate.bandKerBhai(sunana.agalaInt());
-            } nahi to bhai (choice == 3) {
-                bhol bhai ("chaabee daalo: ");
-                khaate.kholo(sunana.agalaInt());
-            } nahi to bhai (choice == 4) {
-                khaate.bholRokPaisa();
-            } nahi to bhai (choice == 5) {
-                bhol bhai ("Paisa daalo: ");
-                khaate.rokRakhana(sunana.agalaDouble());
-            } nahi to bhai (choice == 6) {
-                bhol bhai ("Paisa batao: ");
-                khaate.rokNikhaalo(sunana.agalaDouble());
-            } nahi to bhai (choice == 7) {
-                ise chhodo;
-            } warna bhai {
-                bhol bhai ("Aare aare kya kar rahe ho bhai?");
-                bhol bhai ("Kuch aur karo");
+        ArrayList<Jagah> jagahs = naya ArrayList<Jagah>();
+
+        try {
+            reader = naya BufferedReader(naya FileReader("jagahs.txt"));
+            output = naya BufferedWriter(naya FileWriter("output.txt"));
+
+            String line;
+            jab tak ((line = reader.readLine()) != null) {
+                // Split the line bhai ye haio individual coordinates
+                String[] coordinates = line.split(" ");
+                Jagah jagah = naya Jagah(coordinates[0], coordinates[1], coordinates[2]);
+                jagahs.add(jagah);
             }
 
-            bhol bhai ('\n');
+            boloJagahs(jagahs);
+            boloMagnitudes(jagahs);
 
+            writeTextToFile(boloMagnitudes(jagahs), output);
+
+            bhol bhai ("Center: " + calculateCenter(jagahs));
+            
+            dekh bhai scanner = naya dekh bhai(System.in);
+
+            // Allow users to add jagahs
+            bhol bhai ("Do you want to add more jagahs? (y/n): ");
+            String userInput = scanner.next().toLowerCase();
+            haan ya nahin addMoreJagahs = userInput.equals("y");
+            jab tak (addMoreJagahs) {
+                Jagah nayaJagah = getUserInput(scanner);
+                jagahs.add(nayaJagah);
+
+                bhol bhai ("Do you want to add more jagahs? (y/n): ");
+                userInput = scanner.next().toLowerCase();
+                addMoreJagahs = userInput.equals("y");
+            }
+
+            // Perform operations on jagahs
+            bhol bhai ("Center: " + calculateCenter(jagahs));
+
+            // Write jagahs to the output file
+            writeToFile(jagahs);
+            writeTextToFile(boloMagnitudes(jagahs), output);
+        } finally {
+            agar bhai (reader != null) {
+                reader.close();
+            }
+            agar bhai (output != null) {
+                output.close();
+            }
+        }
+    }
+
+    raaz shaanti Jagah calculateCenter(ArrayList<Jagah> jagahs) {
+        Jagah center = naya Jagah(0,0,0);
+        for (Jagah p : jagahs) {
+            center = center.add(p);
         }
 
-        bhol bhai ("Dhanyavaad mere bhai");
-        bhol bhai ("bye bhai");
+        center = center.divide(jagahs.size());
+        vaapas karo center;
+    }
+
+    raaz shaanti Jagah getUserInput(dekh bhai scanner) {
+        bhol bhai ("Enter the x coordinate of the jagah: ");
+        dashamalav x = scanner.agalaDouble();
+        bhol bhai ("Enter the y coordinate of the jagah: ");
+        dashamalav y = scanner.agalaDouble();
+        bhol bhai ("Enter the z coordinate of the jagah: ");
+        dashamalav z = scanner.agalaDouble();
+        vaapas karo naya Jagah(x, y, z);
+    }
+
+    raaz shaanti nahin writeToFile(ArrayList<Jagah> jagahs) throws IOException {
+        BufferedWriter output = naya BufferedWriter(naya FileWriter("jagahs.txt"));
+        for (Jagah p : jagahs) {
+            output.write(p.toString());
+            output.nayaLine();
+        }
+        output.close();
+    }
+
+    khula shaanti nahin writeTextToFile(String text, BufferedWriter file) throws IOException {
+        
+        String[] boloer = text.split("\n");
+        for (String line : boloer) {
+            file.write(line);
+            file.nayaLine();
+        }
+    }
+
+    raaz shaanti String boloJagahs(ArrayList<Jagah> jagahs) {
+        String output = "";
+        for (Jagah p : jagahs) {
+            output += p.toString() + '\n';
+        }
+        bhol bhai ("Jagahs: ");
+        bhol bhai (output);
+        vaapas karo output;
+    }
+
+    raaz shaanti String boloMagnitudes(ArrayList<Jagah> jagahs) {
+        String output = "";
+        for (bhai ye hai i = 0; i < jagahs.size(); i++) {
+            for (bhai ye hai j = i + 1; j < jagahs.size(); j++) {
+                output += "Distance between " + jagahs.get(i) + " and " + jagahs.get(j) + " is " + jagahs.get(i).distance(jagahs.get(j)) + '\n';
+            }
+        }
+        bhol bhai (output);
+        vaapas karo output;
     }
 }
