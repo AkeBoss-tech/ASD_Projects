@@ -57,7 +57,8 @@ class Parameter {
 }
 
 public class Main {
-    private static final double TIME_CONSTANT = 0.1;
+    private static double TIME_CONSTANT = 1;
+    private static final double TIME_STEPS = 100;
 
     public static void main(String args[]) throws IOException {
         BufferedReader reader = null;
@@ -72,9 +73,10 @@ public class Main {
             String line;
             while ((line = reader.readLine()) != null) {
                 // Split the line into individual coordinates
+                // B, R, C, time_start, time_end
                 String[] coordinates = line.split(" ");
-                Parameter point = new Parameter(coordinates[0], coordinates[1], coordinates[2], coordinates[3], coordinates[4]);
-                parameters.add(point);
+                Parameter parameter = new Parameter(coordinates[0], coordinates[1], coordinates[2], coordinates[3], coordinates[4]);
+                parameters.add(parameter);
             }
 
             printParameters(parameters);
@@ -91,6 +93,10 @@ public class Main {
                 output.close();
             }
         }
+    }
+
+    public static void calculateTimeConstant(double start, double end) {
+        TIME_CONSTANT = (end - start) / TIME_STEPS;
     }
 
     public static void writeTextToFile(String text, BufferedWriter file) throws IOException {
@@ -114,10 +120,44 @@ public class Main {
     private static String getTimes(ArrayList<Parameter> parameters) {
         String output = "";
         for (int i = 0; i < parameters.size(); i++) {
-            output += "Parameter " + (i + 1) + ": ";
-            for (double time = parameters.get(i).getTimeStart(); time <= parameters.get(i).getTimeEnd(); time += TIME_CONSTANT) {
-                output += parameters.get(i).getVTime(time) + " ";
+            Parameter parameter = parameters.get(i);
+            calculateTimeConstant(parameter.getTimeStart(), parameter.getTimeEnd());
+            output += "Parameter " + (i + 1) + " " + parameter.toString() + ": \n";
+            double[] outputArray = new double[(int) ((parameter.getTimeEnd() - parameter.getTimeStart()) / TIME_CONSTANT) + 1];
+            for (double time = parameter.getTimeStart(); time <= parameter.getTimeEnd(); time += TIME_CONSTANT) {
+                output += time + " " + parameter.getVTime(time) + " \n";
+                outputArray[(int) ((time - parameter.getTimeStart()) / TIME_CONSTANT)] = parameter.getVTime(time);
             }
+
+            // get the value closes to 0.05 B and 0.95 B
+            double B = parameter.getB();
+            double closestTo05 = 0;
+            double closestTo95 = 0;
+            for (int j = 0; j < outputArray.length; j++) {
+                if (outputArray[j] >= 0.05 * B) {
+                    // check if the one lower is closer
+                    if (Math.abs(outputArray[j] - 0.05 * B) < Math.abs(outputArray[j - 1] - 0.05 * B)) {
+                        closestTo05 = j;
+                    } else {
+                        closestTo05 = j - 1;
+                    }
+                    break;
+                }
+            }
+            for (int j = 0; j < outputArray.length; j++) {
+                if (outputArray[j] >= 0.95 * B) {
+                    // check if the one lower is closer
+                    if (Math.abs(outputArray[j] - 0.95 * B) < Math.abs(outputArray[j - 1] - 0.95 * B)) {
+                        closestTo95 = j;
+                    } else {
+                        closestTo95 = j - 1;
+                    }
+                    break;
+                }
+            }
+            output += "Time to reach 0.05 B: " + closestTo05 * TIME_CONSTANT + " microseconds\n";
+            output += "Time to reach 0.95 B: " + closestTo95 * TIME_CONSTANT + " microseconds\n";
+            output += "Rise Time in microseconds: " + (closestTo95 - closestTo05) * TIME_CONSTANT + " microseconds\n";
         }
         System.out.println(output);
         return output;
