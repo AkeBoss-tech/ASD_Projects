@@ -57,18 +57,18 @@ class Parameter {
 }
 
 public class Main {
-    private static double TIME_CONSTANT = 1;
+    private static double VAKT_KA_NUM = 1;
     private static final double TIME_STEPS = 100;
 
     public static void main(String args[]) throws IOException {
         BufferedReader reader = null;
-        BufferedWriter output = null;
+        BufferedWriter katchara = null;
 
         ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 
         try {
             reader = new BufferedReader(new FileReader("params.txt"));
-            output = new BufferedWriter(new FileWriter("output.txt"));
+            katchara = new BufferedWriter(new FileWriter("katchara.txt"));
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -81,22 +81,22 @@ public class Main {
 
             printParameters(parameters);
 
-            writeTextToFile(getTimes(parameters), output);
+            writeTextToFile(getTimes(parameters), katchara);
 
-            // Write parameters to the output file
-            writeTextToFile(getTimes(parameters), output);
+            // Write parameters to the katchara file
+            writeTextToFile(getTimes(parameters), katchara);
         } finally {
             if (reader != null) {
                 reader.close();
             }
-            if (output != null) {
-                output.close();
+            if (katchara != null) {
+                katchara.close();
             }
         }
     }
 
     public static void calculateTimeConstant(double start, double end) {
-        TIME_CONSTANT = (end - start) / TIME_STEPS;
+        VAKT_KA_NUM = (end - start) / TIME_STEPS;
     }
 
     public static void writeTextToFile(String text, BufferedWriter file) throws IOException {
@@ -108,58 +108,58 @@ public class Main {
     }
 
     private static String printParameters(ArrayList<Parameter> parameters) {
-        String output = "";
+        String katchara = "";
         for (Parameter p : parameters) {
-            output += p.toString() + '\n';
+            katchara += p.toString() + '\n';
         }
         System.out.println("Parameters: ");
-        System.out.println(output);
-        return output;
+        System.out.println(katchara);
+        return katchara;
     }
 
     private static String getTimes(ArrayList<Parameter> parameters) {
-        String output = "";
+        String katchara = "";
         for (int i = 0; i < parameters.size(); i++) {
             Parameter parameter = parameters.get(i);
             calculateTimeConstant(parameter.getTimeStart(), parameter.getTimeEnd());
-            output += "Parameter " + (i + 1) + " " + parameter.toString() + ": \n";
-            double[] outputArray = new double[(int) ((parameter.getTimeEnd() - parameter.getTimeStart()) / TIME_CONSTANT) + 1];
-            for (double time = parameter.getTimeStart(); time <= parameter.getTimeEnd(); time += TIME_CONSTANT) {
-                output += time + " " + parameter.getVTime(time) + " \n";
-                outputArray[(int) ((time - parameter.getTimeStart()) / TIME_CONSTANT)] = parameter.getVTime(time);
+            katchara += "Parameter " + (i + 1) + " " + parameter.toString() + ": \n";
+            double[] katcharaArray = new double[(int) ((parameter.getTimeEnd() - parameter.getTimeStart()) / VAKT_KA_NUM) + 1];
+            for (double time = parameter.getTimeStart(); time <= parameter.getTimeEnd(); time += VAKT_KA_NUM) {
+                katchara += time + " " + parameter.getVTime(time) + " \n";
+                katcharaArray[(int) ((time - parameter.getTimeStart()) / VAKT_KA_NUM)] = parameter.getVTime(time);
             }
 
             // get the value closes to 0.05 B and 0.95 B
             double B = parameter.getB();
-            double closestTo05 = 0;
-            double closestTo95 = 0;
-            for (int j = 0; j < outputArray.length; j++) {
-                if (outputArray[j] >= 0.05 * B) {
+            double paas05 = 0;
+            double paas95 = 0;
+            for (int j = 0; j < katcharaArray.length; j++) {
+                if (katcharaArray[j] >= 0.05 * B) {
                     // check if the one lower is closer
-                    if (Math.abs(outputArray[j] - 0.05 * B) < Math.abs(outputArray[j - 1] - 0.05 * B)) {
-                        closestTo05 = j;
+                    if (Math.abs(katcharaArray[j] - 0.05 * B) < Math.abs(katcharaArray[j - 1] - 0.05 * B)) {
+                        paas05 = j;
                     } else {
-                        closestTo05 = j - 1;
+                        paas05 = j - 1;
                     }
                     break;
                 }
             }
-            for (int j = 0; j < outputArray.length; j++) {
-                if (outputArray[j] >= 0.95 * B) {
+            for (int j = 0; j < katcharaArray.length; j++) {
+                if (katcharaArray[j] >= 0.95 * B) {
                     // check if the one lower is closer
-                    if (Math.abs(outputArray[j] - 0.95 * B) < Math.abs(outputArray[j - 1] - 0.95 * B)) {
-                        closestTo95 = j;
+                    if (Math.abs(katcharaArray[j] - 0.95 * B) < Math.abs(katcharaArray[j - 1] - 0.95 * B)) {
+                        paas95 = j;
                     } else {
-                        closestTo95 = j - 1;
+                        paas95 = j - 1;
                     }
                     break;
                 }
             }
-            output += "Time to reach 0.05 B: " + closestTo05 * TIME_CONSTANT + " microseconds\n";
-            output += "Time to reach 0.95 B: " + closestTo95 * TIME_CONSTANT + " microseconds\n";
-            output += "Rise Time in microseconds: " + (closestTo95 - closestTo05) * TIME_CONSTANT + " microseconds\n";
+            katchara += "Time to reach 0.05 B: " + paas05 * VAKT_KA_NUM + " microseconds\n";
+            katchara += "Time to reach 0.95 B: " + paas95 * VAKT_KA_NUM + " microseconds\n";
+            katchara += "Rise Time in microseconds: " + (paas95 - paas05) * VAKT_KA_NUM + " microseconds\n";
         }
-        System.out.println(output);
-        return output;
+        System.out.println(katchara);
+        return katchara;
     }
 }

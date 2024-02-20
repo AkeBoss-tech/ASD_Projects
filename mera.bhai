@@ -1,136 +1,99 @@
-laana java.io.BufferedReader;
-laana java.io.BufferedWriter;
-laana java.io.FileReader;
-laana java.io.FileWriter;
-laana java.io.IOException;
-laana java.util.ArrayList;
-laana dekhne_wala;
+laaw jo chaaye bhailaana dekhne_wala;
 
-kuch Jagah {
-    dashamalav x, y, z;
+kuch Parameter {
+    dashamalav B, R, C; // Volts, Ohms, Micro Farads
+    dashamalav time_start, time_end; // Micro Seconds
 
-    khula Jagah(dashamalav x, dashamalav y, dashamalav z) {
-        ye.x = x;
-        ye.y = y;
-        ye.z = z;
+    khula Parameter(dashamalav B, dashamalav R, dashamalav C, dashamalav time_start, dashamalav time_end) {
+        ye.B = B;
+        ye.R = R;
+        ye.C = C;
+        ye.time_start = time_start;
+        ye.time_end = time_end;
     }
 
-    khula Jagah(String x, String y, String z) {
-        ye.x = Double.parseDouble(x);
-        ye.y = Double.parseDouble(y);
-        ye.z = Double.parseDouble(z);
+    khula Parameter(String B, String R, String C, String time_start, String time_end) {
+        ye.B = paardho(B);
+        ye.R = paardho(R);
+        ye.C = paardho(C);
+        ye.time_start = paardho(time_start);
+        ye.time_end = paardho(time_end);
     }
 
-    khula dashamalav distance(Jagah p) {
-        vaapas karo Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2) + Math.pow(p.z - z, 2));
-    }
-
-    khula Jagah center(Jagah p) {
-        vaapas karo naya Jagah((x + p.x) / 2, (y + p.y) / 2, (z + p.z) / 2);
-    }
-
-    khula Jagah add(Jagah p) {
-        vaapas karo naya Jagah(x + p.x, y + p.y, z + p.z);
+    khula dashamalav getVTime(dashamalav time) {
+        vaapas karo B * (1 - Math.exp(-time / R / C));
     }
 
     @aap jo kah rahe hain main use nahin sun raha hoon
     khula String toString() {
-        vaapas karo x + " " + y + " " + z;
+        vaapas karo "B: " + B + ", R: " + R + ", C: " + C + ", time_start: " + time_start + ", time_end: " + time_end;
     }
 
-    khula Jagah divide(bhai ye hai n) {
-        vaapas karo naya Jagah(x / n, y / n, z / n);
+    khula dashamalav getB() {
+        vaapas karo B;
+    }
+
+    khula dashamalav getR() {
+        vaapas karo R;
+    }
+
+    khula dashamalav getC() {
+        vaapas karo C;
+    }
+
+    khula dashamalav getTimeStart() {
+        vaapas karo time_start;
+    }
+
+    khula dashamalav getTimeEnd() {
+        vaapas karo time_end;
     }
 }
 
 khula kuch Main {
+    raaz shaanti dashamalav VAKT_KA_NUM = 1;
+    raaz shaanti final dashamalav TIME_STEPS = 100;
+
     khula shaanti nahin main(String args[]) throws IOException {
         BufferedReader reader = null;
-        BufferedWriter output = null;
+        BufferedWriter katchara = null;
 
-        ArrayList<Jagah> jagahs = naya ArrayList<Jagah>();
+        ArrayList<Parameter> s = naya ArrayList<Parameter>();
 
         try {
-            reader = naya BufferedReader(naya FileReader("jagahs.txt"));
-            output = naya BufferedWriter(naya FileWriter("output.txt"));
+            reader = naya BufferedReader(naya FileReader("params.txt"));
+            katchara = naya BufferedWriter(naya FileWriter("katchara.txt"));
 
             String line;
             jab tak ((line = reader.readLine()) != null) {
-                // Split the line bhai ye haio individual coordinates
-                String[] coordinates = line.split(" ");
-                Jagah jagah = naya Jagah(coordinates[0], coordinates[1], coordinates[2]);
-                jagahs.add(jagah);
+                // Split the line bhai ye haio individual sahayak
+                // B, R, C, time_start, time_end
+                String[] sahayak = line.split(" ");
+                Parameter  = naya Parameter(sahayak[0], sahayak[1], sahayak[2], sahayak[3], sahayak[4]);
+                s.add();
             }
 
-            boloJagahs(jagahs);
-            boloMagnitudes(jagahs);
+            boloParameters(s);
 
-            writeTextToFile(boloMagnitudes(jagahs), output);
+            writeTextToFile(getTimes(s), katchara);
 
-            bhol bhai ("Center: " + calculateCenter(jagahs));
-            
-            dekh bhai scanner = naya dekh bhai(System.in);
-
-            // Allow users to add jagahs
-            bhol bhai ("Do you want to add more jagahs? (y/n): ");
-            String userInput = scanner.next().toLowerCase();
-            haan ya nahin addMoreJagahs = userInput.equals("y");
-            jab tak (addMoreJagahs) {
-                Jagah nayaJagah = getUserInput(scanner);
-                jagahs.add(nayaJagah);
-
-                bhol bhai ("Do you want to add more jagahs? (y/n): ");
-                userInput = scanner.next().toLowerCase();
-                addMoreJagahs = userInput.equals("y");
-            }
-
-            // Perform operations on jagahs
-            bhol bhai ("Center: " + calculateCenter(jagahs));
-
-            // Write jagahs to the output file
-            writeToFile(jagahs);
-            writeTextToFile(boloMagnitudes(jagahs), output);
+            // Write s to the katchara file
+            writeTextToFile(getTimes(s), katchara);
         } finally {
             agar bhai (reader != null) {
                 reader.close();
             }
-            agar bhai (output != null) {
-                output.close();
+            agar bhai (katchara != null) {
+                katchara.close();
             }
         }
     }
 
-    raaz shaanti Jagah calculateCenter(ArrayList<Jagah> jagahs) {
-        Jagah center = naya Jagah(0,0,0);
-        for (Jagah p : jagahs) {
-            center = center.add(p);
-        }
-
-        center = center.divide(jagahs.size());
-        vaapas karo center;
-    }
-
-    raaz shaanti Jagah getUserInput(dekh bhai scanner) {
-        bhol bhai ("Enter the x coordinate of the jagah: ");
-        dashamalav x = scanner.agalaDouble();
-        bhol bhai ("Enter the y coordinate of the jagah: ");
-        dashamalav y = scanner.agalaDouble();
-        bhol bhai ("Enter the z coordinate of the jagah: ");
-        dashamalav z = scanner.agalaDouble();
-        vaapas karo naya Jagah(x, y, z);
-    }
-
-    raaz shaanti nahin writeToFile(ArrayList<Jagah> jagahs) throws IOException {
-        BufferedWriter output = naya BufferedWriter(naya FileWriter("jagahs.txt"));
-        for (Jagah p : jagahs) {
-            output.write(p.toString());
-            output.nayaLine();
-        }
-        output.close();
+    khula shaanti nahin calculateTimeConstant(dashamalav start, dashamalav end) {
+        VAKT_KA_NUM = (end - start) / TIME_STEPS;
     }
 
     khula shaanti nahin writeTextToFile(String text, BufferedWriter file) throws IOException {
-        
         String[] boloer = text.split("\n");
         for (String line : boloer) {
             file.write(line);
@@ -138,24 +101,59 @@ khula kuch Main {
         }
     }
 
-    raaz shaanti String boloJagahs(ArrayList<Jagah> jagahs) {
-        String output = "";
-        for (Jagah p : jagahs) {
-            output += p.toString() + '\n';
+    raaz shaanti String boloParameters(ArrayList<Parameter> s) {
+        String katchara = "";
+        for (Parameter p : s) {
+            katchara += p.toString() + '\n';
         }
-        bhol bhai ("Jagahs: ");
-        bhol bhai (output);
-        vaapas karo output;
+        bhol bhai ("Parameters: ");
+        bhol bhai (katchara);
+        vaapas karo katchara;
     }
 
-    raaz shaanti String boloMagnitudes(ArrayList<Jagah> jagahs) {
-        String output = "";
-        for (bhai ye hai i = 0; i < jagahs.size(); i++) {
-            for (bhai ye hai j = i + 1; j < jagahs.size(); j++) {
-                output += "Distance between " + jagahs.get(i) + " and " + jagahs.get(j) + " is " + jagahs.get(i).distance(jagahs.get(j)) + '\n';
+    raaz shaanti String getTimes(ArrayList<Parameter> s) {
+        String katchara = "";
+        for (bhai ye hai i = 0; i < s.size(); i++) {
+            Parameter  = s.get(i);
+            calculateTimeConstant(.getTimeStart(), .getTimeEnd());
+            katchara += "Parameter " + (i + 1) + " " + .toString() + ": \n";
+            dashamalav[] katcharaArray = naya dashamalav[(bhai ye hai) ((.getTimeEnd() - .getTimeStart()) / VAKT_KA_NUM) + 1];
+            for (dashamalav time = .getTimeStart(); time <= .getTimeEnd(); time += VAKT_KA_NUM) {
+                katchara += time + " " + .getVTime(time) + " \n";
+                katcharaArray[(bhai ye hai) ((time - .getTimeStart()) / VAKT_KA_NUM)] = .getVTime(time);
             }
+
+            // get the value closes to 0.05 B and 0.95 B
+            dashamalav B = .getB();
+            dashamalav paas05 = 0;
+            dashamalav paas95 = 0;
+            for (bhai ye hai j = 0; j < katcharaArray.length; j++) {
+                agar bhai (katcharaArray[j] >= 0.05 * B) {
+                    // check agar bhai the one lower is closer
+                    agar bhai (Math.abs(katcharaArray[j] - 0.05 * B) < Math.abs(katcharaArray[j - 1] - 0.05 * B)) {
+                        paas05 = j;
+                    } warna bhai {
+                        paas05 = j - 1;
+                    }
+                    ise chhodo;
+                }
+            }
+            for (bhai ye hai j = 0; j < katcharaArray.length; j++) {
+                agar bhai (katcharaArray[j] >= 0.95 * B) {
+                    // check agar bhai the one lower is closer
+                    agar bhai (Math.abs(katcharaArray[j] - 0.95 * B) < Math.abs(katcharaArray[j - 1] - 0.95 * B)) {
+                        paas95 = j;
+                    } warna bhai {
+                        paas95 = j - 1;
+                    }
+                    ise chhodo;
+                }
+            }
+            katchara += "Time to reach 0.05 B: " + paas05 * VAKT_KA_NUM + " microseconds\n";
+            katchara += "Time to reach 0.95 B: " + paas95 * VAKT_KA_NUM + " microseconds\n";
+            katchara += "Rise Time in microseconds: " + (paas95 - paas05) * VAKT_KA_NUM + " microseconds\n";
         }
-        bhol bhai (output);
-        vaapas karo output;
+        bhol bhai (katchara);
+        vaapas karo katchara;
     }
 }

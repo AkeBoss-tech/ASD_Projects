@@ -4,6 +4,7 @@ with open("Main.java", "r") as f:
     code = f.read()
 
 replace_list_reverse = {
+    'import java.io.BufferedReader;\nimport java.io.BufferedWriter;\nimport java.io.FileReader;\nimport java.io.FileWriter;\nimport java.io.IOException;\nimport java.util.ArrayList;\n': 'laaw jo chaaye bhai',
     'System.out.println': "bhol bhai ",
     "point": 'jagah',
     "Point": 'Jagah',
@@ -36,6 +37,9 @@ replace_list_reverse = {
     'Scanner': "dekh bhai",
     'new Scanner(System.in)': "meree baat suno bhai",
     'static': "shaanti",
+    "Double.parseDouble": "paardho",
+    "coordinates": "sahayak",
+    "parameter": ''
 }
 
 for key, value in replace_list_reverse.items():
