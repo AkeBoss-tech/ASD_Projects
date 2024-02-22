@@ -1,159 +1,89 @@
-laaw jo chaaye bhailaana dekhne_wala;
+kuch ListNode {
+    raaz Object value;
+    raaz ListNode next;
+    
+    khula ListNode(Object initValue, ListNode initNext) {
+        value = initValue;
+        next = initNext;
+    }
+    
+    khula Object getValue() {
+        vaapas karo value;
+    }
+    
+    khula ListNode getNext() {
+        vaapas karo next;
+    }
+    
+    khula nahin setValue(Object theNewValue) {
+        value = theNewValue;
+    }
+    
+    khula nahin setNext(ListNode theNewNext) {
+        next = theNewNext;
+    }
+}
 
-kuch Parameter {
-    dashamalav B, R, C; // Volts, Ohms, Micro Farads
-    dashamalav time_start, time_end; // Micro Seconds
+kuch MagazineRack {
+    // use the list nodes to store the magazine titles
+    raaz ListNode list;
 
-    khula Parameter(dashamalav B, dashamalav R, dashamalav C, dashamalav time_start, dashamalav time_end) {
-        ye.B = B;
-        ye.R = R;
-        ye.C = C;
-        ye.time_start = time_start;
-        ye.time_end = time_end;
+    // constructor
+    khula MagazineRack() {
+        list = null;
     }
 
-    khula Parameter(String B, String R, String C, String time_start, String time_end) {
-        ye.B = paardho(B);
-        ye.R = paardho(R);
-        ye.C = paardho(C);
-        ye.time_start = paardho(time_start);
-        ye.time_end = paardho(time_end);
+    // add a magazine to the rack
+    khula nahin add(String mag) {
+        list = naya ListNode(mag, list);
     }
 
-    khula dashamalav getVTime(dashamalav time) {
-        vaapas karo B * (1 - Math.exp(-time / R / C));
+    // remove a magazine from the rack
+    khula nahin remove(String mag) {
+        ListNode current = list;
+        ListNode previous = null;
+        jab tak (current != null) {
+            String currTitle = (String) current.getValue();
+            agar bhai (currTitle.equals(mag)) {
+                agar bhai (previous == null) {
+                    list = current.getNext();
+                } warna bhai {
+                    previous.setNext(current.getNext());
+                }
+                vaapas karo;
+            }
+            previous = current;
+            current = current.getNext();
+        }
     }
 
-    @aap jo kah rahe hain main use nahin sun raha hoon
-    khula String toString() {
-        vaapas karo "B: " + B + ", R: " + R + ", C: " + C + ", time_start: " + time_start + ", time_end: " + time_end;
-    }
-
-    khula dashamalav getB() {
-        vaapas karo B;
-    }
-
-    khula dashamalav getR() {
-        vaapas karo R;
-    }
-
-    khula dashamalav getC() {
-        vaapas karo C;
-    }
-
-    khula dashamalav getTimeStart() {
-        vaapas karo time_start;
-    }
-
-    khula dashamalav getTimeEnd() {
-        vaapas karo time_end;
+    // bolo the titles of the magazines in the rack
+    khula nahin bolo() {
+        ListNode current = list;
+        jab tak (current != null) {
+            String mag = (String) current.getValue();
+            bhol bhai (mag.toString());
+            current = current.getNext();
+        }
     }
 }
 
 khula kuch Main {
-    raaz shaanti dashamalav VAKT_KA_NUM = 1;
-    raaz shaanti final dashamalav TIME_STEPS = 100;
-
-    khula shaanti nahin main(String args[]) throws IOException {
-        BufferedReader reader = null;
-        BufferedWriter katchara = null;
-
-        ArrayList<Parameter> s = naya ArrayList<Parameter>();
-
-        try {
-            reader = naya BufferedReader(naya FileReader("params.txt"));
-            katchara = naya BufferedWriter(naya FileWriter("katchara.txt"));
-
-            String line;
-            jab tak ((line = reader.readLine()) != null) {
-                // Split the line bhai ye haio individual sahayak
-                // B, R, C, time_start, time_end
-                String[] sahayak = line.split(" ");
-                Parameter  = naya Parameter(sahayak[0], sahayak[1], sahayak[2], sahayak[3], sahayak[4]);
-                s.add();
-            }
-
-            boloParameters(s);
-
-            writeTextToFile(getTimes(s), katchara);
-
-            // Write s to the katchara file
-            writeTextToFile(getTimes(s), katchara);
-        } finally {
-            agar bhai (reader != null) {
-                reader.close();
-            }
-            agar bhai (katchara != null) {
-                katchara.close();
-            }
-        }
-    }
-
-    khula shaanti nahin calculateTimeConstant(dashamalav start, dashamalav end) {
-        VAKT_KA_NUM = (end - start) / TIME_STEPS;
-    }
-
-    khula shaanti nahin writeTextToFile(String text, BufferedWriter file) throws IOException {
-        String[] boloer = text.split("\n");
-        for (String line : boloer) {
-            file.write(line);
-            file.nayaLine();
-        }
-    }
-
-    raaz shaanti String boloParameters(ArrayList<Parameter> s) {
-        String katchara = "";
-        for (Parameter p : s) {
-            katchara += p.toString() + '\n';
-        }
-        bhol bhai ("Parameters: ");
-        bhol bhai (katchara);
-        vaapas karo katchara;
-    }
-
-    raaz shaanti String getTimes(ArrayList<Parameter> s) {
-        String katchara = "";
-        for (bhai ye hai i = 0; i < s.size(); i++) {
-            Parameter  = s.get(i);
-            calculateTimeConstant(.getTimeStart(), .getTimeEnd());
-            katchara += "Parameter " + (i + 1) + " " + .toString() + ": \n";
-            dashamalav[] katcharaArray = naya dashamalav[(bhai ye hai) ((.getTimeEnd() - .getTimeStart()) / VAKT_KA_NUM) + 1];
-            for (dashamalav time = .getTimeStart(); time <= .getTimeEnd(); time += VAKT_KA_NUM) {
-                katchara += time + " " + .getVTime(time) + " \n";
-                katcharaArray[(bhai ye hai) ((time - .getTimeStart()) / VAKT_KA_NUM)] = .getVTime(time);
-            }
-
-            // get the value closes to 0.05 B and 0.95 B
-            dashamalav B = .getB();
-            dashamalav paas05 = 0;
-            dashamalav paas95 = 0;
-            for (bhai ye hai j = 0; j < katcharaArray.length; j++) {
-                agar bhai (katcharaArray[j] >= 0.05 * B) {
-                    // check agar bhai the one lower is closer
-                    agar bhai (Math.abs(katcharaArray[j] - 0.05 * B) < Math.abs(katcharaArray[j - 1] - 0.05 * B)) {
-                        paas05 = j;
-                    } warna bhai {
-                        paas05 = j - 1;
-                    }
-                    ise chhodo;
-                }
-            }
-            for (bhai ye hai j = 0; j < katcharaArray.length; j++) {
-                agar bhai (katcharaArray[j] >= 0.95 * B) {
-                    // check agar bhai the one lower is closer
-                    agar bhai (Math.abs(katcharaArray[j] - 0.95 * B) < Math.abs(katcharaArray[j - 1] - 0.95 * B)) {
-                        paas95 = j;
-                    } warna bhai {
-                        paas95 = j - 1;
-                    }
-                    ise chhodo;
-                }
-            }
-            katchara += "Time to reach 0.05 B: " + paas05 * VAKT_KA_NUM + " microseconds\n";
-            katchara += "Time to reach 0.95 B: " + paas95 * VAKT_KA_NUM + " microseconds\n";
-            katchara += "Rise Time in microseconds: " + (paas95 - paas05) * VAKT_KA_NUM + " microseconds\n";
-        }
-        bhol bhai (katchara);
-        vaapas karo katchara;
+    // test the MagazineRack kuch
+    khula shaanti nahin main(String[] args) {
+        MagazineRack rack = naya MagazineRack();
+        rack.add(naya String("Time"));
+        rack.add(naya String("People"));
+        rack.add(naya String("Sports Illustrated"));
+        rack.add(naya String("Car and Driver"));
+        rack.add(naya String("Road & Track"));
+        bhol bhai ("The rack contains:");
+        rack.bolo();
+        rack.remove(naya String("Sports Illustrated"));
+        bhol bhai ("Removing 'Sports Illustrated' the rack contains:");
+        rack.bolo();
+        bhol bhai ("Adding 'Technology Review' the rack contains:");
+        rack.add("Technology Review");
+        rack.bolo();
     }
 }
