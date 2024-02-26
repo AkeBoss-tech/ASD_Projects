@@ -42,9 +42,9 @@ for key, value in replace_list.items():
     code = code.replace(key, value)
 
 # save it to a file called bhai.java
-with open("compiled/BhaiKaBank.java", "w") as f:
+with open("compiled/Main.java", "w") as f:
     f.write(code)
 
 # run the java file
-os.system("cd compiled/ && javac BhaiKaBank.java")
-os.system("java compiled.BhaiKaBank")
+os.system("cd compiled/ && javac Main.java")
+os.system("java compiled.Main")

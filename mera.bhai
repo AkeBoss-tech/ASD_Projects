@@ -1,10 +1,12 @@
 kuch ListNode {
     raaz Object value;
     raaz ListNode next;
+    raaz ListNode previous;
     
-    khula ListNode(Object initValue, ListNode initNext) {
+    khula ListNode(Object initValue, ListNode initNext, ListNode initPrevious) {
         value = initValue;
         next = initNext;
+        previous = initPrevious;
     }
     
     khula Object getValue() {
@@ -22,10 +24,22 @@ kuch ListNode {
     khula nahin setNext(ListNode theNewNext) {
         next = theNewNext;
     }
+
+    khula ListNode getPrevious() {
+        vaapas karo previous;
+    }
+
+    khula nahin setPrevious(ListNode theNewPrevious) {
+        previous = theNewPrevious;
+    }
+    
+    khula String toString() {
+        vaapas karo value.toString();
+    }
 }
 
 kuch MagazineRack {
-    // use the list nodes to store the magazine titles
+    // use the list nodes to store the magazine titles in a circular doubly linked list
     raaz ListNode list;
 
     // constructor
@@ -34,36 +48,76 @@ kuch MagazineRack {
     }
 
     // add a magazine to the rack
-    khula nahin add(String mag) {
-        list = naya ListNode(mag, list);
-    }
-
-    // remove a magazine from the rack
-    khula nahin remove(String mag) {
-        ListNode current = list;
-        ListNode previous = null;
-        jab tak (current != null) {
-            String currTitle = (String) current.getValue();
-            agar bhai (currTitle.equals(mag)) {
-                agar bhai (previous == null) {
-                    list = current.getNext();
-                } warna bhai {
-                    previous.setNext(current.getNext());
-                }
-                vaapas karo;
-            }
-            previous = current;
-            current = current.getNext();
+    khula nahin add(Object obj) {
+        agar bhai (list == null) {
+            list = naya ListNode(obj, null, null);
+            list.setNext(list);
+            list.setPrevious(list);
+        } warna bhai {
+            ListNode node = naya ListNode(obj, list, list.getPrevious());
+            list.getPrevious().setNext(node);
+            list.setPrevious(node);
         }
     }
 
-    // bolo the titles of the magazines in the rack
+    // remove a magazine from the rack
+    khula nahin remove(Object obj) {
+        ListNode current = list;
+        do {
+            agar bhai (current.getValue().equals(obj)) {
+                current.getPrevious().setNext(current.getNext());
+                current.getNext().setPrevious(current.getPrevious());
+                agar bhai (current == list) {
+                    list = current.getNext();
+                }
+                vaapas karo;
+            }
+            current = current.getNext();
+        } jab tak (current != list);
+    }
+
+    // bolo the contents of the rack
     khula nahin bolo() {
         ListNode current = list;
-        jab tak (current != null) {
-            String mag = (String) current.getValue();
-            bhol bhai (mag.toString());
+        do {
+            bhol bhai (current.getValue());
             current = current.getNext();
+        } jab tak (current != list);
+    }
+
+    // bolo the contents of the rack in reverse order
+    khula nahin boloReverse() {
+        bhol bhai ("The rack contains reversed:");
+        ListNode current = list.getPrevious();
+        do {
+            bhol bhai (current.getValue());
+            current = current.getPrevious();
+        } jab tak (current != list.getPrevious());
+    }
+
+    // vaapas karo the number of magazines in the rack
+    khula bhai ye hai size() {
+        bhai ye hai count = 0;
+        ListNode current = list;
+        do {
+            count++;
+            current = current.getNext();
+        } jab tak (current != list);
+        vaapas karo count;
+    }
+
+    khula nahin boloNum(bhai ye hai num) {
+        ListNode current = list;
+        for (bhai ye hai i = 0; i < num; i++) {
+            bhol bhai (current.getValue());
+            current = current.getNext();
+        }
+    }
+    khula nahin boloNumReverse(bhai ye hai num) {
+        ListNode current = list;
+        for (bhai ye hai i = 0; i < num; i++) {
+            bhol bhai (current.getValue());
+            current = current.getPrevious();
         }
     }
 }
@@ -72,18 +126,28 @@ khula kuch Main {
     // test the MagazineRack kuch
     khula shaanti nahin main(String[] args) {
         MagazineRack rack = naya MagazineRack();
-        rack.add(naya String("Time"));
-        rack.add(naya String("People"));
-        rack.add(naya String("Sports Illustrated"));
-        rack.add(naya String("Car and Driver"));
-        rack.add(naya String("Road & Track"));
+        rack.add("Times of India");
+        rack.add("Dhanak Bhaskar");
+        rack.add("Sports Illustrated");
+        rack.add("Car and Driver");
+        rack.add("Road & Track");
+
         bhol bhai ("The rack contains:");
         rack.bolo();
-        rack.remove(naya String("Sports Illustrated"));
+        rack.boloReverse();
+        
+        rack.remove("Sports Illustrated");
         bhol bhai ("Removing 'Sports Illustrated' the rack contains:");
         rack.bolo();
+        rack.boloReverse();
+        
         bhol bhai ("Adding 'Technology Review' the rack contains:");
         rack.add("Technology Review");
         rack.bolo();
+        rack.boloReverse();
+        bhol bhai ("Here's ten things in the rack with looping:");
+        rack.boloNum(10);
+        bhol bhai ("Here's ten things in the rack with looping in reverse:");
+        rack.boloNumReverse(10);
     }
 }

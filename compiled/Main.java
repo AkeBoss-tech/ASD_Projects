@@ -1,3 +1,4 @@
+package compiled;
 class ListNode {
     private Object value;
     private ListNode next;
@@ -76,8 +77,8 @@ class MagazineRack {
         } while (current != list);
     }
 
-    // print the contents of the rack
-    public void print() {
+    // bolo the contents of the rack
+    public void bolo() {
         ListNode current = list;
         do {
             System.out.println(current.getValue());
@@ -85,8 +86,8 @@ class MagazineRack {
         } while (current != list);
     }
 
-    // print the contents of the rack in reverse order
-    public void printReverse() {
+    // bolo the contents of the rack in reverse order
+    public void boloReverse() {
         System.out.println("The rack contains reversed:");
         ListNode current = list.getPrevious();
         do {
@@ -106,14 +107,14 @@ class MagazineRack {
         return count;
     }
 
-    public void printNum(int num) {
+    public void boloNum(int num) {
         ListNode current = list;
         for (int i = 0; i < num; i++) {
             System.out.println(current.getValue());
             current = current.getNext();
         }
     }
-    public void printNumReverse(int num) {
+    public void boloNumReverse(int num) {
         ListNode current = list;
         for (int i = 0; i < num; i++) {
             System.out.println(current.getValue());
@@ -133,21 +134,21 @@ public class Main {
         rack.add("Road & Track");
 
         System.out.println("The rack contains:");
-        rack.print();
-        rack.printReverse();
+        rack.bolo();
+        rack.boloReverse();
         
         rack.remove("Sports Illustrated");
         System.out.println("Removing 'Sports Illustrated' the rack contains:");
-        rack.print();
-        rack.printReverse();
+        rack.bolo();
+        rack.boloReverse();
         
         System.out.println("Adding 'Technology Review' the rack contains:");
         rack.add("Technology Review");
-        rack.print();
-        rack.printReverse();
+        rack.bolo();
+        rack.boloReverse();
         System.out.println("Here's ten things in the rack with looping:");
-        rack.printNum(10);
+        rack.boloNum(10);
         System.out.println("Here's ten things in the rack with looping in reverse:");
-        rack.printNumReverse(10);
+        rack.boloNumReverse(10);
     }
 }
