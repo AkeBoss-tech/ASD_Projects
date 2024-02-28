@@ -1,4 +1,4 @@
-package compiled;
+
 class ListNode {
     private Object value;
     private ListNode next;
