@@ -114,6 +114,7 @@ class MagazineRack {
             current = current.getNext();
         }
     }
+
     public void boloNumReverse(int num) {
         ListNode current = list;
         for (int i = 0; i < num; i++) {
@@ -121,6 +122,19 @@ class MagazineRack {
             current = current.getPrevious();
         }
     }
+
+    public void boloNumRandom(int num) {
+            ListNode current = list;
+            for (int i = 0; i < num; i++) {
+                System.out.println(current);
+                int guess = (int) (Math.random() * 2);
+                if (guess == 0) {
+                    current = current.getNext();
+                } else {
+                    current = current.getPrevious();
+                }
+            }
+        }
 }
 
 public class Main {
@@ -129,16 +143,16 @@ public class Main {
         MagazineRack rack = new MagazineRack();
         rack.add("Times of India");
         rack.add("Dhanak Bhaskar");
-        rack.add("Sports Illustrated");
-        rack.add("Car and Driver");
-        rack.add("Road & Track");
+        rack.add("Champak");
+        rack.add("Filmfare");
+        rack.add("Goa Today");
 
         System.out.println("The rack contains:");
         rack.bolo();
         rack.boloReverse();
         
-        rack.remove("Sports Illustrated");
-        System.out.println("Removing 'Sports Illustrated' the rack contains:");
+        rack.remove("Dhanak Bhaskar");
+        System.out.println("Removing 'Dhanak Bhaskar' the rack contains:");
         rack.bolo();
         rack.boloReverse();
         
@@ -150,5 +164,7 @@ public class Main {
         rack.boloNum(10);
         System.out.println("Here's ten things in the rack with looping in reverse:");
         rack.boloNumReverse(10);
+        System.out.println("Here's ten things in the rack with looping in random:");
+        rack.boloNumRandom(10);
     }
 }
