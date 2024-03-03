@@ -1,170 +1,161 @@
 
-class ListNode {
-    private Object value;
-    private ListNode next;
-    private ListNode previous;
+class Queue {
+    private String value;
+    private Queue next;
     
-    public ListNode(Object initValue, ListNode initNext, ListNode initPrevious) {
+    public Queue(String initValue, Queue initPrevious) {
         value = initValue;
-        next = initNext;
-        previous = initPrevious;
-    }
-    
-    public Object getValue() {
-        return value;
-    }
-    
-    public ListNode getNext() {
-        return next;
-    }
-    
-    public void setValue(Object theNewValue) {
-        value = theNewValue;
-    }
-    
-    public void setNext(ListNode theNewNext) {
-        next = theNewNext;
+        next = initPrevious;
     }
 
-    public ListNode getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(ListNode theNewPrevious) {
-        previous = theNewPrevious;
+    public Queue() {
+        value = null;
+        next = null;
     }
     
-    public String toString() {
-        return value.toString();
+    // fix the enqueue and dequeue methods
+    public String enqueue(String newValue) {
+        if (next.length() == 0) {
+            next = new Queue(newValue, this);
+            return "Added to the end of the queue";
+        } else {
+            return next.enqueue(newValue);
+        }
+    }
+
+    public String dequeue() {
+        if (next.length() == 0) {
+            return "Queue is empty";
+        } else {
+            next = next.next;
+            return "Removed from the queue";
+        }
+    }
+
+    public void peek() {
+        if (next.length() == 0) {
+            System.out.println("Queue is empty");
+        } else {
+            System.out.println(next.value);
+        }
+    }
+
+    public int length() {
+        if (value == null) {
+            return 0;
+        }
+
+        if (next == null) {
+            return 1;
+        }
+
+        if (next.length() == 0) {
+            return 1;
+        } else {
+            return 1 + next.length();
+        }
+    }
+
+    public void print() {
+        if (value == null) {
+            return;
+        }
+        System.out.println(value);
+        if (next == null) {
+            return;
+        }
+        if (next.length() != 0) {
+            next.print();
+        }
     }
 }
 
-class MagazineRack {
-    // use the list nodes to store the magazine titles in a circular doubly linked list
-    private ListNode list;
+class TicketWindows {
+    private Queue window1 = new Queue();
+    private Queue window2 = new Queue();
+    private Queue window3 = new Queue();
+    private Queue window4 = new Queue();
+
+    private int time = 0;
 
     // constructor
-    public MagazineRack() {
-        list = null;
-    }
-
-    // add a magazine to the rack
-    public void add(Object obj) {
-        if (list == null) {
-            list = new ListNode(obj, null, null);
-            list.setNext(list);
-            list.setPrevious(list);
+    public TicketWindows() {}
+    
+    public void addToShortest(String customer) {
+        if (window1.length() == 0) {
+            window1 = new Queue(customer, null);
+        } else if (window2.length() == 0) {
+            window2 = new Queue(customer, null);
+        } else if (window3.length() == 0) {
+            window3 = new Queue(customer, null);
+        } else if (window4.length() == 0) {
+            window4 = new Queue(customer, null);
         } else {
-            ListNode node = new ListNode(obj, list, list.getPrevious());
-            list.getPrevious().setNext(node);
-            list.setPrevious(node);
-        }
-    }
-
-    // remove a magazine from the rack
-    public void remove(Object obj) {
-        ListNode current = list;
-        do {
-            if (current.getValue().equals(obj)) {
-                current.getPrevious().setNext(current.getNext());
-                current.getNext().setPrevious(current.getPrevious());
-                if (current == list) {
-                    list = current.getNext();
-                }
-                return;
-            }
-            current = current.getNext();
-        } while (current != list);
-    }
-
-    // bolo the contents of the rack
-    public void bolo() {
-        ListNode current = list;
-        do {
-            System.out.println(current.getValue());
-            current = current.getNext();
-        } while (current != list);
-    }
-
-    // bolo the contents of the rack in reverse order
-    public void boloReverse() {
-        System.out.println("The rack contains reversed:");
-        ListNode current = list.getPrevious();
-        do {
-            System.out.println(current.getValue());
-            current = current.getPrevious();
-        } while (current != list.getPrevious());
-    }
-
-    // return the number of magazines in the rack
-    public int size() {
-        int count = 0;
-        ListNode current = list;
-        do {
-            count++;
-            current = current.getNext();
-        } while (current != list);
-        return count;
-    }
-
-    public void boloNum(int num) {
-        ListNode current = list;
-        for (int i = 0; i < num; i++) {
-            System.out.println(current.getValue());
-            current = current.getNext();
-        }
-    }
-
-    public void boloNumReverse(int num) {
-        ListNode current = list;
-        for (int i = 0; i < num; i++) {
-            System.out.println(current.getValue());
-            current = current.getPrevious();
-        }
-    }
-
-    public void boloNumRandom(int num) {
-            ListNode current = list;
-            for (int i = 0; i < num; i++) {
-                System.out.println(current);
-                int guess = (int) (Math.random() * 2);
-                if (guess == 0) {
-                    current = current.getNext();
-                } else {
-                    current = current.getPrevious();
-                }
+            if (window1.length() <= window2.length() && window1.length() <= window3.length() && window1.length() <= window4.length()) {
+                window1.enqueue(customer);
+            } else if (window2.length() <= window1.length() && window2.length() <= window3.length() && window2.length() <= window4.length()) {
+                window2.enqueue(customer);
+            } else if (window3.length() <= window1.length() && window3.length() <= window2.length() && window3.length() <= window4.length()) {
+                window3.enqueue(customer);
+            } else {
+                window4.enqueue(customer);
             }
         }
+    }
+
+    public void serveCustomer() {
+        if (window1 != null) {
+            window1.dequeue();
+        }
+        if (window2 != null) {
+            window2.dequeue();
+        }
+        if (window3 != null) {
+            window3.dequeue();
+        }
+        if (window4 != null) {
+            window4.dequeue();
+        }
+    }
+
+    public void timeTick() {
+        int new_customers = (int) (Math.random() * 4);
+        time++;
+        
+        for (int i = 0; i < new_customers; i++) {
+            addToShortest("Customer " + i + " at time " + time);
+        }
+        
+        // serveCustomer();
+    }
+
+    public void print() {
+        System.out.println("Window 1:");
+        window1.print();
+        System.out.println("Window 2:");
+        window2.print();
+        System.out.println("Window 3:");
+        window3.print();
+        System.out.println("Window 4:");
+        window4.print();
+    }
+
+    public void totalCustomers() {
+        System.out.println("Total customers served: " + (window1.length() + window2.length() + window3.length() + window4.length()));
+    }
 }
 
 public class Main {
-    // test the MagazineRack class
+    // test the TicketWindows class
     public static void main(String[] args) {
-        MagazineRack rack = new MagazineRack();
-        rack.add("Times of India");
-        rack.add("Dhanak Bhaskar");
-        rack.add("Champak");
-        rack.add("Filmfare");
-        rack.add("Goa Today");
+        TicketWindows rack = new TicketWindows();
 
-        System.out.println("The rack contains:");
-        rack.bolo();
-        rack.boloReverse();
+        for (int i = 0; i < 10; i++) {
+            rack.timeTick();
+            rack.print();
+            rack.totalCustomers();
+            System.out.println();
+        }
         
-        rack.remove("Dhanak Bhaskar");
-        System.out.println("Removing 'Dhanak Bhaskar' the rack contains:");
-        rack.bolo();
-        rack.boloReverse();
-        
-        System.out.println("Adding 'Technology Review' the rack contains:");
-        rack.add("Technology Review");
-        rack.bolo();
-        rack.boloReverse();
-        System.out.println("Here's ten things in the rack with looping:");
-        rack.boloNum(10);
-        System.out.println("Here's ten things in the rack with looping in reverse:");
-        rack.boloNumReverse(10);
-        System.out.println("Here's ten things in the rack with looping in random:");
-        rack.boloNumRandom(10);
     }
 }
