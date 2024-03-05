@@ -1,72 +1,39 @@
+import java.util.ArrayList;
 
 class Queue {
-    private String value;
-    private Queue next;
+    private ArrayList<String> queue = new ArrayList<String>();
     
-    public Queue(String initValue, Queue initPrevious) {
-        value = initValue;
-        next = initPrevious;
+    public Queue(String initValue) {
+        queue.add(initValue);
     }
 
-    public Queue() {
-        value = null;
-        next = null;
-    }
+    public Queue() {}
     
     // fix the enqueue and dequeue methods
-    public String enqueue(String newValue) {
-        if (next.length() == 0) {
-            next = new Queue(newValue, this);
-            return "Added to the end of the queue";
-        } else {
-            return next.enqueue(newValue);
-        }
+    public void enqueue(String newValue) {
+        queue.add(newValue);
     }
 
     public String dequeue() {
-        if (next.length() == 0) {
+        if (queue.size() == 0) {
             return "Queue is empty";
         } else {
-            next = next.next;
-            return "Removed from the queue";
-        }
-    }
-
-    public void peek() {
-        if (next.length() == 0) {
-            System.out.println("Queue is empty");
-        } else {
-            System.out.println(next.value);
-        }
-    }
-
-    public int length() {
-        if (value == null) {
-            return 0;
-        }
-
-        if (next == null) {
-            return 1;
-        }
-
-        if (next.length() == 0) {
-            return 1;
-        } else {
-            return 1 + next.length();
+            return "Removed from the queue: " + queue.remove(0);
         }
     }
 
     public void print() {
-        if (value == null) {
-            return;
+        if (queue.size() == 0) {
+            System.out.println("Queue is empty");
+        } else {
+            for (String value : queue) {
+                System.out.println(value);
+            }
         }
-        System.out.println(value);
-        if (next == null) {
-            return;
-        }
-        if (next.length() != 0) {
-            next.print();
-        }
+    }
+
+    public int length() {
+        return queue.size();
     }
 }
 
@@ -82,14 +49,15 @@ class TicketWindows {
     public TicketWindows() {}
     
     public void addToShortest(String customer) {
+        System.out.println("Adding " + customer);
         if (window1.length() == 0) {
-            window1 = new Queue(customer, null);
+            window1.enqueue(customer);
         } else if (window2.length() == 0) {
-            window2 = new Queue(customer, null);
+            window2.enqueue(customer);
         } else if (window3.length() == 0) {
-            window3 = new Queue(customer, null);
+            window3.enqueue(customer);
         } else if (window4.length() == 0) {
-            window4 = new Queue(customer, null);
+            window4.enqueue(customer);
         } else {
             if (window1.length() <= window2.length() && window1.length() <= window3.length() && window1.length() <= window4.length()) {
                 window1.enqueue(customer);
@@ -103,30 +71,42 @@ class TicketWindows {
         }
     }
 
+    public boolean randomChance() {
+        return Math.random() < 0.5;
+    }
+
     public void serveCustomer() {
         if (window1 != null) {
-            window1.dequeue();
+            if (randomChance()) {
+                window1.dequeue();
+            }
         }
         if (window2 != null) {
-            window2.dequeue();
+            if (randomChance()) {
+                window2.dequeue();
+            }
         }
         if (window3 != null) {
-            window3.dequeue();
+            if (randomChance()) {
+                window3.dequeue();
+            }
         }
         if (window4 != null) {
-            window4.dequeue();
+            if (randomChance()) {
+                window4.dequeue();
+            }
         }
     }
 
     public void timeTick() {
-        int new_customers = (int) (Math.random() * 4);
+        int new_customers = (int) (Math.random() * 8);
         time++;
         
         for (int i = 0; i < new_customers; i++) {
             addToShortest("Customer " + i + " at time " + time);
         }
         
-        // serveCustomer();
+        serveCustomer();
     }
 
     public void print() {
