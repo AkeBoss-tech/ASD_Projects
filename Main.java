@@ -18,6 +18,7 @@ class Queue {
         if (queue.size() == 0) {
             return "Queue is empty";
         } else {
+            System.out.println("Served Customer: " + queue.get(0));
             return "Removed from the queue: " + queue.remove(0);
         }
     }
@@ -101,7 +102,8 @@ class TicketWindows {
     public void timeTick() {
         int new_customers = (int) (Math.random() * 8);
         time++;
-        
+
+        System.out.println("Time: " + time + " New customers: " + new_customers);
         for (int i = 0; i < new_customers; i++) {
             addToShortest("Customer " + i + " at time " + time);
         }
