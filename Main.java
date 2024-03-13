@@ -1,73 +1,73 @@
 import java.util.ArrayList;
 
-class Queue {
-    private ArrayList<String> queue = new ArrayList<String>();
+class Stack {
+    private ArrayList<String> stack = new ArrayList<String>();
     
-    public Queue(String initValue) {
-        queue.add(initValue);
+    public Stack(String initValue) {
+        stack.add(initValue);
     }
 
-    public Queue() {}
+    public Stack() {}
     
-    // fix the enqueue and dequeue methods
-    public void enqueue(String newValue) {
-        queue.add(newValue);
+    // fix the push and pop methods
+    public void push(String newValue) {
+        stack.add(newValue);
     }
 
-    public String dequeue() {
-        if (queue.size() == 0) {
-            return "Queue is empty";
+    public String pop() {
+        if (stack.size() == 0) {
+            return "Stack is empty";
         } else {
-            System.out.println("Served Customer: " + queue.get(0));
-            return "Removed from the queue: " + queue.remove(0);
+            System.out.println("Served Customer: " + stack.get(stack.size() - 1));
+            return "Removed from the stack: " + stack.remove(stack.size() - 1);
         }
     }
 
     public void print() {
-        if (queue.size() == 0) {
-            System.out.println("Queue is empty");
+        if (stack.size() == 0) {
+            System.out.println("Stack is empty");
         } else {
-            for (String value : queue) {
+            for (String value : stack) {
                 System.out.println(value);
             }
         }
     }
 
     public int length() {
-        return queue.size();
+        return stack.size();
     }
 }
 
-class TicketWindows {
-    private Queue window1 = new Queue();
-    private Queue window2 = new Queue();
-    private Queue window3 = new Queue();
-    private Queue window4 = new Queue();
+class BalancedParentheses {
+    private Stack window1 = new Stack();
+    private Stack window2 = new Stack();
+    private Stack window3 = new Stack();
+    private Stack window4 = new Stack();
 
     private int time = 0;
 
     // constructor
-    public TicketWindows() {}
+    public BalancedParentheses () {}
     
     public void addToShortest(String customer) {
         System.out.println("Adding " + customer);
         if (window1.length() == 0) {
-            window1.enqueue(customer);
+            window1.push(customer);
         } else if (window2.length() == 0) {
-            window2.enqueue(customer);
+            window2.push(customer);
         } else if (window3.length() == 0) {
-            window3.enqueue(customer);
+            window3.push(customer);
         } else if (window4.length() == 0) {
-            window4.enqueue(customer);
+            window4.push(customer);
         } else {
             if (window1.length() <= window2.length() && window1.length() <= window3.length() && window1.length() <= window4.length()) {
-                window1.enqueue(customer);
+                window1.push(customer);
             } else if (window2.length() <= window1.length() && window2.length() <= window3.length() && window2.length() <= window4.length()) {
-                window2.enqueue(customer);
+                window2.push(customer);
             } else if (window3.length() <= window1.length() && window3.length() <= window2.length() && window3.length() <= window4.length()) {
-                window3.enqueue(customer);
+                window3.push(customer);
             } else {
-                window4.enqueue(customer);
+                window4.push(customer);
             }
         }
     }
@@ -79,22 +79,22 @@ class TicketWindows {
     public void serveCustomer() {
         if (window1 != null) {
             if (randomChance()) {
-                window1.dequeue();
+                window1.pop();
             }
         }
         if (window2 != null) {
             if (randomChance()) {
-                window2.dequeue();
+                window2.pop();
             }
         }
         if (window3 != null) {
             if (randomChance()) {
-                window3.dequeue();
+                window3.pop();
             }
         }
         if (window4 != null) {
             if (randomChance()) {
-                window4.dequeue();
+                window4.pop();
             }
         }
     }
@@ -128,9 +128,9 @@ class TicketWindows {
 }
 
 public class Main {
-    // test the TicketWindows class
+    // test the BalancedParentheses  class
     public static void main(String[] args) {
-        TicketWindows rack = new TicketWindows();
+        BalancedParentheses  rack = new BalancedParentheses();
 
         for (int i = 0; i < 10; i++) {
             rack.timeTick();
