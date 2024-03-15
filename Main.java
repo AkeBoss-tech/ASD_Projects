@@ -38,11 +38,44 @@ class Stack {
     }
 }
 
+class Seperator {
+    private int index;
+
+    public Seperator(int index) {
+        this.index = index;
+    }
+
+    public String getSeperator(String input) {
+        return input.substring(index, index + 1);
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public String getAlternateSeperator(String input) {
+        switch (getSeperator(input)) {
+            case "(":
+                return ")";
+            case ")":
+                return "(";
+            case "{":
+                return "}";
+            case "}":
+                return "{";
+            case "[":
+                return "]";
+            case "]":
+                return "[";
+            default:
+                return "Invalid Seperator";
+        
+        }
+    }
+}
+
 class BalancedParentheses {
-    private Stack window1 = new Stack();
-    private Stack window2 = new Stack();
-    private Stack window3 = new Stack();
-    private Stack window4 = new Stack();
+    private Stack parenthesis = new Stack();
 
     private int time = 0;
 
@@ -50,26 +83,7 @@ class BalancedParentheses {
     public BalancedParentheses () {}
     
     public void addToShortest(String customer) {
-        System.out.println("Adding " + customer);
-        if (window1.length() == 0) {
-            window1.push(customer);
-        } else if (window2.length() == 0) {
-            window2.push(customer);
-        } else if (window3.length() == 0) {
-            window3.push(customer);
-        } else if (window4.length() == 0) {
-            window4.push(customer);
-        } else {
-            if (window1.length() <= window2.length() && window1.length() <= window3.length() && window1.length() <= window4.length()) {
-                window1.push(customer);
-            } else if (window2.length() <= window1.length() && window2.length() <= window3.length() && window2.length() <= window4.length()) {
-                window2.push(customer);
-            } else if (window3.length() <= window1.length() && window3.length() <= window2.length() && window3.length() <= window4.length()) {
-                window3.push(customer);
-            } else {
-                window4.push(customer);
-            }
-        }
+        
     }
 
     public boolean randomChance() {
@@ -77,53 +91,15 @@ class BalancedParentheses {
     }
 
     public void serveCustomer() {
-        if (window1 != null) {
-            if (randomChance()) {
-                window1.pop();
-            }
-        }
-        if (window2 != null) {
-            if (randomChance()) {
-                window2.pop();
-            }
-        }
-        if (window3 != null) {
-            if (randomChance()) {
-                window3.pop();
-            }
-        }
-        if (window4 != null) {
-            if (randomChance()) {
-                window4.pop();
-            }
-        }
+        
     }
 
     public void timeTick() {
-        int new_customers = (int) (Math.random() * 8);
-        time++;
-
-        System.out.println("Time: " + time + " New customers: " + new_customers);
-        for (int i = 0; i < new_customers; i++) {
-            addToShortest("Customer " + i + " at time " + time);
-        }
         
-        serveCustomer();
     }
 
     public void print() {
-        System.out.println("Window 1:");
-        window1.print();
-        System.out.println("Window 2:");
-        window2.print();
-        System.out.println("Window 3:");
-        window3.print();
-        System.out.println("Window 4:");
-        window4.print();
-    }
-
-    public void totalCustomers() {
-        System.out.println("Total customers served: " + (window1.length() + window2.length() + window3.length() + window4.length()));
+        
     }
 }
 
@@ -135,7 +111,6 @@ public class Main {
         for (int i = 0; i < 10; i++) {
             rack.timeTick();
             rack.print();
-            rack.totalCustomers();
             System.out.println();
         }
         
