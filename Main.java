@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 class Stack {
     private ArrayList<Separator> stack = new ArrayList<Separator>();
@@ -45,8 +46,8 @@ class Stack {
 class Separator {
     private int index;
 
-    private static final String[] opening_separators = {"(", "{", "["};
-    private static final String[] closing_separators = {")", "}", "]"};
+    private static final String[] opening_separators = {"(", "{", "[", "<"}; // add whatever things you want
+    private static final String[] closing_separators = {")", "}", "]", ">"}; // add whatever things you want
 
     public Separator(int index) {
         this.index = index;
@@ -123,17 +124,15 @@ class Separator {
 
 
     EXTRA IDEAS: 
-    1. Your code can check for angled brackets (chevrons <>). 
-    2. Your code can output the longest enclosed string of characters in a valid string. 
-    3. Your code can output the index and which character makes the string invalid. 
-    4. Your code can output the swaps needed to validate a string.
+    1. Your code can check for angled brackets (chevrons <>). ✅
+    2. Your code can output the longest enclosed string of characters in a valid string. ✅
+    3. Your code can output the index and which character makes the string invalid. ✅
+    4. Your code can output the swaps needed to validate a string. ✅
  */
 
 class BalancedParentheses {
     private Stack parenthesis = new Stack();
     private String input;
-
-    private int time = 0;
 
     // constructor
     public BalancedParentheses (String input) {
@@ -146,9 +145,15 @@ class BalancedParentheses {
     }
 
     public boolean isValid() {
-        if (parenthesis.length() % 2 != 0) {
+        // this is an easy thing to check for 
+        // but I want it to be more dynamic and check for errors
+        /* if (parenthesis.length() % 2 != 0) {
             return false;
-        }
+        } */
+        System.out.println();
+        System.out.println("Starting Input: " + input);
+
+        String largest_enclosed = "";
 
         Stack open_separators = new Stack();
 
@@ -157,19 +162,53 @@ class BalancedParentheses {
 
             if (current.isOpening(input)) {
                 open_separators.push(current);
-            } else {
+            } else { // if it is a closing separator
                 if (open_separators.length() == 0) {
+                    System.out.println("Error\nNo opening separator for: " + current.getSeparator(input));
+                    System.out.println("Index: " + current.getIndex());
                     return false;
                 } else {
                     Separator last_open = open_separators.pop();
                     if (!current.getAlternateSeparator(input).equals(last_open.getSeparator(input))) {
+                        System.out.println("Error\nMismatched separators: ");
+                        System.out.println("Expected: " + last_open.getAlternateSeparator(input) + " but got: " + current.getSeparator(input));
+                        System.out.println("Index: " + current.getIndex());
+
+                        // little code to show where exactly the issue is
+                        System.out.println(input);
+                        String spaces = "";
+                        for (int j = 0; j < current.getIndex(); j++) {
+                            spaces += " ";
+                        }
+                        System.out.println(spaces + "^");
                         return false;
+                    }
+                    // print the stuff between the separators
+                    String text = input.substring(last_open.getIndex() + 1, current.getIndex());
+                    System.out.println("Text between: '" + text + "'");
+                    if (text.length() > largest_enclosed.length()) {
+                        largest_enclosed = text;
                     }
                 }
             }
         }
 
+        if (open_separators.length() != 0) {
+            System.out.println("Error\nThere are still open separators");
+            for (int i = 0; i < open_separators.length(); i++) {
+                System.out.println(open_separators.get(i).getSeparator(input));
+            }
+            return false;
+        }
+
+        System.out.println("Largest enclosed: '" + largest_enclosed + "'");
+        System.out.println("Length of largest enclosed: " + largest_enclosed.length());
+
         return true;
+    }
+
+    public void print() {
+        System.out.println("String is valid: " + isValid());
     }
 
 }
@@ -177,11 +216,22 @@ class BalancedParentheses {
 public class Main {
     // test the BalancedParentheses  class
     public static void main(String[] args) {
-        BalancedParentheses rack = new BalancedParentheses("(hello)(()){[{[goodbye]}]}");
-        System.out.println(rack.isValid());
+        BalancedParentheses thing = new BalancedParentheses("(hello)(()){[{[goodbye]}]}");
+        thing.print();
 
-        BalancedParentheses rack2 = new BalancedParentheses("(([is this balanced?))]{}{[]}{}");
-        System.out.println(rack2.isValid());
+        BalancedParentheses thing2 = new BalancedParentheses("(([is this balanced?))]{}{[]}{}");
+        thing2.print(); 
         
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter 'exit' to stop:");
+        System.out.println("Press enter to continue:");
+        while (!input.nextLine().equals("exit")) {
+            System.out.println("Enter a string: ");
+            String user_input = input.nextLine();
+            BalancedParentheses thing3 = new BalancedParentheses(user_input);
+            thing3.print();
+            System.out.println("Enter 'exit' to stop:");
+        }
+        input.close();
     }
 }
