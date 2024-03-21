@@ -1,19 +1,12 @@
-# Mera Physics Ka Calculator
+# Mera Stack ka Lab
 
 Name: Akash Dubey
 
-For a particular RC circuit, the voltage (in volts) across the capacitor is represented by the equation
-$v(t) = B(1 - e^-t/(RC))$
+Design and implement an application that evaluates a postfix expression that operates on integer operands using the arithmetic operators +, -, *, /, and %.  You already know infix expressions, in which the operator is positioned between its two operands.  A postfix expression puts the operators after its operands.  Keep in mind that an operand could be the result of another operation.  Postfix notation eliminates the need for parenthese to force precedence.  For example the following infix expression
+$(5+2)*(8-5)$
+Is equivalent to the following postfix expression:
+$5 2 + 8  5 - *$
 
-Suppose the parameters of the electric circuit are B = $12 V$, R = $500Ω$, and C = $0.25µF$.  
+The evaluation of a postfix expression is facilitated by using a stack.  As you process a postfix expression from left to right, you encounter operands and operators.  If you encounter an operand, push it on the stack.  If you encounter an operator, pop two operands off the stack, perform the operation, and push the result back on the stack.  When you have processed the entire expression there will be one value on the stack, which is the result of the entire expression.
 
-Consequently 
-$v(t) = 12(1 - e^(-0.008t))$
-where t has units of µs.
-
-Create and then read a file params.txt containing the values for B, R, C, and the starting and ending values for t.  Write a file `rc.txt` of values for the time t and the corresponding capacitor voltage $v(t)$, where $t$ goes from the given starting value to the given ending value in 100 microsecond steps.  In this example, if t goes from $0$ to $1000 µs$, the twelfth entry in the output file would be 
-
-110  7.02261
-
-
-Then, read the file rc.txt and use the data to calculate the rise time.  The rise time is defined as the time required for the capacitor voltage to change from $0.06 B$ to $0.95 B$. Get the value for B, and find the data points that are closest to 0.05 B and 0.95 B
+You may want to use a scanner object to assist in the parsing of the expression.  You can assume the expression will be in valid postfix form.  Import the pre-made stack class for this lab.

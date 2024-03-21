@@ -1,3 +1,4 @@
+package compiled;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -73,8 +74,6 @@ class ReversePolish {
     public double evaluate() {
         number_stack = new Stack<Number>();
 
-        System.out.println("Steps in the evaluation: ");
-
         String[] input_array = input.split(" ");
         for (int i = 0; i < input_array.length; i++) {
             if (isNumber(input_array[i])) {
@@ -83,18 +82,14 @@ class ReversePolish {
                 Number a = number_stack.pop();
                 Number b = number_stack.pop();
                 Operator op = new Operator(input_array[i], i);
-                // print out the steps in completion
-                System.out.println(b.getValue() + " " + op.getValue() + " " + a.getValue() + " = " + op.operation(b.getValue(), a.getValue()));
                 number_stack.push(new Number(op.operation(b.getValue(), a.getValue()), i));
             }
         }
 
-        System.out.println();
-
         return number_stack.pop().getValue();
     }
 
-    public void print() {
+    public void bolo() {
         System.out.println("The input is: " + input);
         System.out.println("The result is: " + evaluate());
     }
@@ -125,7 +120,7 @@ public class Main {
             String user_input = input.nextLine();
 
             ReversePolish thing3 = new ReversePolish(user_input);
-            thing3.print();
+            thing3.bolo();
 
             System.out.println("\n\nEnter 'exit' to stop:");
         }

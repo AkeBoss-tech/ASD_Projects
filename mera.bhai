@@ -1,153 +1,135 @@
-kuch ListNode {
-    raaz Object value;
-    raaz ListNode next;
-    raaz ListNode previous;
-    
-    khula ListNode(Object initValue, ListNode initNext, ListNode initPrevious) {
-        value = initValue;
-        next = initNext;
-        previous = initPrevious;
+laana dekhne_wala;
+laana java.util.Stack;
+
+kuch Number {
+    raaz dashamalav value;
+    raaz bhai ye hai index;
+
+    khula Number(dashamalav value, bhai ye hai index) {
+        ye.value = value;
     }
-    
-    khula Object getValue() {
+
+    khula dashamalav getValue() {
         vaapas karo value;
     }
-    
-    khula ListNode getNext() {
-        vaapas karo next;
-    }
-    
-    khula nahin setValue(Object theNewValue) {
-        value = theNewValue;
-    }
-    
-    khula nahin setNext(ListNode theNewNext) {
-        next = theNewNext;
-    }
 
-    khula ListNode getPrevious() {
-        vaapas karo previous;
-    }
-
-    khula nahin setPrevious(ListNode theNewPrevious) {
-        previous = theNewPrevious;
-    }
-    
-    khula String toString() {
-        vaapas karo value.toString();
+    khula bhai ye hai getIndex() {
+        vaapas karo index;
     }
 }
 
-kuch MagazineRack {
-    // use the list nodes to store the magazine titles in a circular doubly linked list
-    raaz ListNode list;
+kuch Operator {
+    raaz String value;
+    raaz bhai ye hai index;
 
-    // constructor
-    khula MagazineRack() {
-        list = null;
+    khula Operator(String value, bhai ye hai index) {
+        ye.value = value;
+        ye.index = index;
     }
 
-    // add a magazine to the rack
-    khula nahin add(Object obj) {
-        agar bhai (list == null) {
-            list = naya ListNode(obj, null, null);
-            list.setNext(list);
-            list.setPrevious(list);
+    khula String getValue() {
+        vaapas karo value;
+    }
+
+    khula bhai ye hai getIndex() {
+        vaapas karo index;
+    }
+
+    khula dashamalav operation(dashamalav a, dashamalav b) {
+        agar bhai (value.equals("+")) {
+            vaapas karo a + b;
+        } warna bhai agar bhai (value.equals("-")) {
+            vaapas karo a - b;
+        } warna bhai agar bhai (value.equals("*")) {
+            vaapas karo a * b;
+        } warna bhai agar bhai (value.equals("/")) {
+            vaapas karo a / b;
+        } warna bhai agar bhai (value.equals("%")) {
+            vaapas karo a % b;
         } warna bhai {
-            ListNode node = naya ListNode(obj, list, list.getPrevious());
-            list.getPrevious().setNext(node);
-            list.setPrevious(node);
+            vaapas karo 0;
+        }
+    }
+}
+
+kuch ReversePolish {
+    raaz String input;
+    raaz Stack<Number> number_stack;
+
+    khula ReversePolish(String input) {
+        ye.input = input;
+        number_stack = naya Stack<Number>();
+    }
+
+    raaz haan ya nahin isNumber(String s) {
+        try {
+            Integer.parseInt(s);
+            vaapas karo sahi;
+        } catch (NumberFormatException e) {
+            vaapas karo galat;
         }
     }
 
-    // remove a magazine from the rack
-    khula nahin remove(Object obj) {
-        ListNode current = list;
-        do {
-            agar bhai (current.getValue().equals(obj)) {
-                current.getPrevious().setNext(current.getNext());
-                current.getNext().setPrevious(current.getPrevious());
-                agar bhai (current == list) {
-                    list = current.getNext();
-                }
-                vaapas karo;
+    khula dashamalav evaluate() {
+        number_stack = naya Stack<Number>();
+
+        bhol bhai ("Steps in the evaluation: ");
+
+        String[] input_array = input.split(" ");
+        for (bhai ye hai i = 0; i < input_array.length; i++) {
+            agar bhai (isNumber(input_array[i])) {
+                number_stack.push(naya Number(Integer.parseInt(input_array[i]), i));
+            } warna bhai {
+                Number a = number_stack.pop();
+                Number b = number_stack.pop();
+                Operator op = naya Operator(input_array[i], i);
+                // bolo out the steps in completion
+                bhol bhai (b.getValue() + " " + op.getValue() + " " + a.getValue() + " = " + op.operation(b.getValue(), a.getValue()));
+                number_stack.push(naya Number(op.operation(b.getValue(), a.getValue()), i));
             }
-            current = current.getNext();
-        } jab tak (current != list);
+        }
+
+        bhol bhai ();
+
+        vaapas karo number_stack.pop().getValue();
     }
 
-    // bolo the contents of the rack
     khula nahin bolo() {
-        ListNode current = list;
-        do {
-            bhol bhai (current.getValue());
-            current = current.getNext();
-        } jab tak (current != list);
+        bhol bhai ("The input is: " + input);
+        bhol bhai ("The result is: " + evaluate());
     }
 
-    // bolo the contents of the rack in reverse order
-    khula nahin boloReverse() {
-        bhol bhai ("The rack contains reversed:");
-        ListNode current = list.getPrevious();
-        do {
-            bhol bhai (current.getValue());
-            current = current.getPrevious();
-        } jab tak (current != list.getPrevious());
-    }
-
-    // vaapas karo the number of magazines in the rack
-    khula bhai ye hai size() {
-        bhai ye hai count = 0;
-        ListNode current = list;
-        do {
-            count++;
-            current = current.getNext();
-        } jab tak (current != list);
-        vaapas karo count;
-    }
-
-    khula nahin boloNum(bhai ye hai num) {
-        ListNode current = list;
-        for (bhai ye hai i = 0; i < num; i++) {
-            bhol bhai (current.getValue());
-            current = current.getNext();
-        }
-    }
-    khula nahin boloNumReverse(bhai ye hai num) {
-        ListNode current = list;
-        for (bhai ye hai i = 0; i < num; i++) {
-            bhol bhai (current.getValue());
-            current = current.getPrevious();
-        }
+    khula shaanti dashamalav evaluate(String input) {
+        ReversePolish thing = naya ReversePolish(input);
+        vaapas karo thing.evaluate();
     }
 }
 
 khula kuch Main {
-    // test the MagazineRack kuch
+    // test the Reverse Polish Notation kuch
     khula shaanti nahin main(String[] args) {
-        MagazineRack rack = naya MagazineRack();
-        rack.add("Times of India");
-        rack.add("Dhanak Bhaskar");
-        rack.add("Sports Illustrated");
-        rack.add("Car and Driver");
-        rack.add("Road & Track");
+        bhol bhai ("Testing the Reverse Polish Notation kuch");
 
-        bhol bhai ("The rack contains:");
-        rack.bolo();
-        rack.boloReverse();
-        
-        rack.remove("Sports Illustrated");
-        bhol bhai ("Removing 'Sports Illustrated' the rack contains:");
-        rack.bolo();
-        rack.boloReverse();
-        
-        bhol bhai ("Adding 'Technology Review' the rack contains:");
-        rack.add("Technology Review");
-        rack.bolo();
-        rack.boloReverse();
-        bhol bhai ("Here's ten things in the rack with looping:");
-        rack.boloNum(10);
-        bhol bhai ("Here's ten things in the rack with looping in reverse:");
-        rack.boloNumReverse(10);
+        // Test cases
+        bhol bhai ("Test case 1: ");
+        bhol bhai ("Input: 5 2 + 8 5 - *");
+        bhol bhai ("Expected output: " + ReversePolish.evaluate("5 2 + 8 5 - *"));
+
+        // Enter your own input
+        dekh bhai input = naya dekh bhai(System.in);
+        bhol bhai ("Enter 'exit' to stop:");
+        bhol bhai ("Press enter to continue:");
+
+        jab tak (!input.nextLine().equals("exit")) {
+            bhol bhai ("Enter a string: ");
+            String user_input = input.nextLine();
+
+            ReversePolish thing3 = naya ReversePolish(user_input);
+            thing3.bolo();
+
+            bhol bhai ("\n\nEnter 'exit' to stop:");
+        }
+
+        input.close();
     }
 }
