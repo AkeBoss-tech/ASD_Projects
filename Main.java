@@ -1,137 +1,99 @@
 // worked with ani on this
 
 import java.util.Scanner;
-import java.util.Stack;
 
-class Number {
-    private double value;
-    private int index;
+class FamilyTreeNode {
+    private FamilyTreeNode parent1;
+    private FamilyTreeNode parent2;
 
-    public Number(double value, int index) {
-        this.value = value;
+    private String name;
+
+    FamilyTreeNode (String name) {
+        this.name = name;
+        parent1 = null;
+        parent2 = null;
     }
 
-    public double getValue() {
-        return value;
+    FamilyTreeNode (String name, FamilyTreeNode parent1, FamilyTreeNode parent2) {
+        this.name = name;
+        this.parent1 = parent1;
+        this.parent2 = parent2;
     }
 
-    public int getIndex() {
-        return index;
-    }
-}
-
-class Operator {
-    private String value;
-    private int index;
-
-    public Operator(String value, int index) {
-        this.value = value;
-        this.index = index;
+    public String getName() {
+        return name;
     }
 
-    public String getValue() {
-        return value;
+    public FamilyTreeNode getParent1() {
+        return parent1;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public double operation(double a, double b) {
-        if (value.equals("+")) {
-            return a + b;
-        } else if (value.equals("-")) {
-            return a - b;
-        } else if (value.equals("*")) {
-            return a * b;
-        } else if (value.equals("/")) {
-            return a / b;
-        } else if (value.equals("%")) {
-            return a % b;
-        } else {
-            return 0;
-        }
-    }
-}
-
-class ReversePolish {
-    private String input;
-    private Stack<Number> number_stack;
-
-    public ReversePolish(String input) {
-        this.input = input;
-        number_stack = new Stack<Number>();
-    }
-
-    private boolean isNumber(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public double evaluate() {
-        number_stack = new Stack<Number>();
-
-        System.out.println("Steps in the evaluation: ");
-
-        String[] input_array = input.split(" ");
-        for (int i = 0; i < input_array.length; i++) {
-            if (isNumber(input_array[i])) {
-                number_stack.push(new Number(Integer.parseInt(input_array[i]), i));
-            } else {
-                Number a = number_stack.pop();
-                Number b = number_stack.pop();
-                Operator op = new Operator(input_array[i], i);
-                // print out the steps in completion
-                System.out.println(b.getValue() + " " + op.getValue() + " " + a.getValue() + " = " + op.operation(b.getValue(), a.getValue()));
-                number_stack.push(new Number(op.operation(b.getValue(), a.getValue()), i));
-            }
-        }
-
-        System.out.println();
-
-        return number_stack.pop().getValue();
+    public FamilyTreeNode getParent2() {
+        return parent2;
     }
 
     public void print() {
-        System.out.println("The input is: " + input);
-        System.out.println("The result is: " + evaluate());
+        if (parent1 == null && parent2 == null) {
+            System.out.println("\t" + name);
+        } else if (parent1 == null) {
+            System.out.println("\t\t" + name);
+            System.out.println("\t\t\t\t" + parent2.getName());
+            System.out.println("Parent 2 of " + name);
+            parent2.print();
+        } else if (parent2 == null) {
+            System.out.println("\t\t" + name);
+            System.out.println("" + parent1.getName() + "\t\t\t");
+            System.out.println("Parent 1 of " + name);
+            parent1.print();
+        } else {
+            System.out.println("\t\t" + name);
+            System.out.println("\t/\t\t\t\\");
+            System.out.println("" + parent1.getName() + "\t\t\t" + parent2.getName());
+            System.out.println("Parent 1 of " + name);
+            parent1.print();
+            System.out.println("Parent 2 of " + name);
+            parent2.print();
+        }
+
+        System.out.println();
     }
 
-    public static double evaluate(String input) {
-        ReversePolish thing = new ReversePolish(input);
-        return thing.evaluate();
+    public int getDepth() {
+        if (parent1 == null && parent2 == null) {
+            return 1;
+        } else {
+            return 1 + Math.max(parent1.getDepth(), parent2.getDepth());
+        }
     }
+
+    public int getMembersOfFamily() {
+        if (parent1 == null && parent2 == null) {
+            return 1;
+        } else {
+            return 1 + parent1.getMembersOfFamily() + parent2.getMembersOfFamily();
+        }
+    }
+
 }
 
 public class Main {
-    // test the Reverse Polish Notation class
+    // test the Family Tree class
     public static void main(String[] args) {
-        System.out.println("Testing the Reverse Polish Notation class");
+        System.out.println("Testing the Family binary Tree class");
+        // setup grand parents
+        FamilyTreeNode grandParent1 = new FamilyTreeNode("Dylan Lad Intwala");
+        FamilyTreeNode grandParent2 = new FamilyTreeNode("Vyas Dhar");
 
-        // Test cases
-        System.out.println("Test case 1: ");
-        System.out.println("Input: 5 2 + 8 5 - *");
-        System.out.println("Expected output: " + ReversePolish.evaluate("5 2 + 8 5 - *"));
+        FamilyTreeNode grandParent3 = new FamilyTreeNode("Krish Bansal");
+        FamilyTreeNode grandParent4 = new FamilyTreeNode("Krish Shetty");
 
-        // Enter your own input
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter 'exit' to stop:");
-        System.out.println("Press enter to continue:");
+        // setup parents
+        FamilyTreeNode parent1 = new FamilyTreeNode("Anirudh Tiwary", grandParent1, grandParent2);
+        FamilyTreeNode parent2 = new FamilyTreeNode("Vibhav Chaturvedi", grandParent3, grandParent4);
 
-        while (!input.nextLine().equals("exit")) {
-            System.out.println("Enter a string: ");
-            String user_input = input.nextLine();
-
-            ReversePolish thing3 = new ReversePolish(user_input);
-            thing3.print();
-
-            System.out.println("\n\nEnter 'exit' to stop:");
-        }
-
-        input.close();
+        FamilyTreeNode child = new FamilyTreeNode("Akash Dubey", parent1, parent2);
+        child.print();
+        System.out.println("Depth of the tree: " + child.getDepth());
+        System.out.println("Number of members in the family: " + child.getMembersOfFamily());
     }
 }
